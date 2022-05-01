@@ -79,4 +79,4 @@ class State:
 		:param other: State to compare this state with
 		:return: True is this states priority is lower than the priority of other state. Otherwise False
 		"""
-		return self.priority < other.priority
+		return self.get_cost() < other.get_cost() # order the rooms in the priority queue in ascending order, based on cost

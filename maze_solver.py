@@ -2,7 +2,6 @@
 from fringe import Fringe
 from state import State
 
-
 def solve_maze_general(maze, algorithm):
     """
     Finds a path in a given maze with the given algorithm
@@ -32,7 +31,6 @@ def solve_maze_general(maze, algorithm):
         state = fr.pop()
         room = state.get_room()
         
-
         if room.is_goal():
             # if room is the goal, print that with the statistics and the path and return
             print("solved")
@@ -49,7 +47,10 @@ def solve_maze_general(maze, algorithm):
             if new_room.is_visited == False:                            # Only pushing the new room to the fringe, if it has not been visited before
                 new_state = State(new_room, state, cost)                # Create new state with new room and old room
                 fr.push(new_state)                                      # push the new state
-                new_room.is_visited = True
+                if algorithm == "BFS" or algorithm == "DFS":
+                    new_room.is_visited = True
+        if algorithm == "UCS":
+            room.is_visited = True
 
     print("not solved")     # fringe is empty and goal is not found, so maze is not solved
     fr.print_stats()        # print the statistics of the fringe
