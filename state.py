@@ -73,11 +73,11 @@ class State:
 		self.print_path_helper()
 		print()
 
-	def __lt__(self, other):
+	def __lt__(self, other): # How can we have both returns in the same function? If we add algorithm as a parameter, then we would need to change other functions too.
 		"""
 		Function used to compare two states for the priority queue
 		:param other: State to compare this state with
 		:return: True is this states priority is lower than the priority of other state. Otherwise False
 		"""
-		# return self.get_cost() < other.get_cost() # order the rooms in the priority queue in ascending order, based on cost - used for UCS
+		# return self.get_cost() < other.get_cost() # order the rooms in the priority queue in ascending order, based on cost - used for UCS		
 		return self.get_room().get_heuristic_value() < other.get_room().get_heuristic_value() # used for GREEDY, in GREEDY best - first search, we order the priority queue based on the minimal heuristic value
