@@ -81,4 +81,5 @@ class State:
 		"""
 		# return self.get_cost() < other.get_cost() # order the rooms in the priority queue in ascending order, based on cost - used for UCS		
 		#return self.get_room().get_heuristic_value() < other.get_room().get_heuristic_value() # used for GREEDY, in GREEDY best - first search, we order the priority queue based on the minimal heuristic value
-		return self.get_cost() + self.get_room().get_heuristic_value() < other.get_cost() + other.get_room().get_heuristic_value() # used for A*, the frontier is being ordered ascendingly, based on the sum of the costs incurred and the heuristic value(A* = combination of UCS and GREEDY)
+		#return self.get_cost() + self.get_room().get_heuristic_value() < other.get_cost() + other.get_room().get_heuristic_value() # used for A*, the frontier is being ordered ascendingly, based on the sum of the costs incurred and the heuristic value(A* = combination of UCS and GREEDY)
+		self.priority < other.priority
