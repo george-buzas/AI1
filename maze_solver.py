@@ -18,6 +18,8 @@ def solve_maze_general(maze, algorithm):
         fr = Fringe("PRIORITY")
     elif algorithm == "GREEDY":
         fr = Fringe("PRIORITY")
+    elif algorithm == "ASTAR":
+        fr = Fringe("PRIORITY")
     else:
         print("Algorithm not found/implemented, exit")
         return
@@ -52,7 +54,7 @@ def solve_maze_general(maze, algorithm):
                 fr.push(new_state)                                      # push the new state
                 if algorithm == "BFS" or algorithm == "DFS":
                     new_room.is_visited = True
-        if algorithm == "UCS" or algorithm == "GREEDY":
+        if algorithm == "UCS" or algorithm == "GREEDY" or algorithm == "ASTAR":
             room.is_visited = True
 
     print("not solved")     # fringe is empty and goal is not found, so maze is not solved
