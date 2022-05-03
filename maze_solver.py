@@ -32,6 +32,7 @@ def solve_maze_general(maze, algorithm):
         # get item from fringe and get the room from that state
         state = fr.pop()
         room = state.get_room()
+        # print(room.get_heuristic_value())
         
         if room.is_goal():
             # if room is the goal, print that with the statistics and the path and return
@@ -46,16 +47,6 @@ def solve_maze_general(maze, algorithm):
         for d in room.get_connections():
             # loop through every possible move
             new_room, cost = room.make_move(d, state.get_cost())        # Get new room after move and cost to get there
-            if algorithm == "GREEDY" and new_room.is_goal():            # We need to check if this implementation of GREEDY is correct
-                new_state = State(new_room, state, cost)
-                # if room is the goal, print that with the statistics and the path and return
-                print("solved")
-                fr.print_stats()
-                new_state.print_path()
-                new_state.print_actions()
-                print()  # print newline
-                maze.print_maze_with_path(new_state)
-                return True
             if new_room.is_visited == False:                            # Only pushing the new room to the fringe, if it has not been visited before
                 new_state = State(new_room, state, cost)                # Create new state with new room and old room
                 fr.push(new_state)                                      # push the new state

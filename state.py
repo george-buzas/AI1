@@ -79,4 +79,5 @@ class State:
 		:param other: State to compare this state with
 		:return: True is this states priority is lower than the priority of other state. Otherwise False
 		"""
-		return self.get_cost() < other.get_cost() # order the rooms in the priority queue in ascending order, based on cost
+		# return self.get_cost() < other.get_cost() # order the rooms in the priority queue in ascending order, based on cost - used for UCS
+		return self.get_room().get_heuristic_value() < other.get_room().get_heuristic_value() # used for GREEDY, in GREEDY best - first search, we order the priority queue based on the minimal heuristic value
