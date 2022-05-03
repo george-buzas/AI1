@@ -2,6 +2,7 @@
 from fringe import Fringe
 from state import State
 
+
 def solve_maze_general(maze, algorithm):
     """
     Finds a path in a given maze with the given algorithm
@@ -27,11 +28,11 @@ def solve_maze_general(maze, algorithm):
     room.is_visited = True
 
     while not fr.is_empty():
+
         # get item from fringe and get the room from that state
         state = fr.pop()
         room = state.get_room()
-        # print(room.get_heuristic_value())
-        
+
         if room.is_goal():
             # if room is the goal, print that with the statistics and the path and return
             print("solved")
@@ -50,6 +51,7 @@ def solve_maze_general(maze, algorithm):
                 fr.push(new_state)                                      # push the new state
                 if algorithm == "BFS" or algorithm == "DFS":
                     new_room.is_visited = True
+                    
         if algorithm == "UCS" or algorithm == "GREEDY" or algorithm == "ASTAR":
             room.is_visited = True
 

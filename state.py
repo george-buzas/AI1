@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import maze
 
 
@@ -79,7 +80,13 @@ class State:
 		:param other: State to compare this state with
 		:return: True is this states priority is lower than the priority of other state. Otherwise False
 		"""
-		# return self.get_cost() < other.get_cost() # order the rooms in the priority queue in ascending order, based on cost - used for UCS		
-		#return self.get_room().get_heuristic_value() < other.get_room().get_heuristic_value() # used for GREEDY, in GREEDY best - first search, we order the priority queue based on the minimal heuristic value
-		#return self.get_cost() + self.get_room().get_heuristic_value() < other.get_cost() + other.get_room().get_heuristic_value() # used for A*, the frontier is being ordered ascendingly, based on the sum of the costs incurred and the heuristic value(A* = combination of UCS and GREEDY)
-		self.priority < other.priority
+		algorithm = sys.argv[1].upper() # Check if there is a better option to order the PQ!!!!!!!!!!!!!!!!!
+		if algorithm == "UCS":
+    		# we order the rooms in the priority queue in ascending order, based on cost 
+			return self.get_cost() < other.get_cost()		
+		if algorithm == "GREEDY":
+    		# we order the priority queue based on the minimal heuristic value
+			return self.get_room().get_heuristic_value() < other.get_room().get_heuristic_value() 
+		if algorithm == "ASTAR":
+    		# the frontier is being ordered ascendingly, based on the sum of the costs incurred and the heuristic value(A* = combination of UCS and GREEDY)
+			return self.get_cost() + self.get_room().get_heuristic_value() < other.get_cost() + other.get_room().get_heuristic_value()
