@@ -3,7 +3,6 @@ from fringe import Fringe
 from state import State
 
 def IDS(maze, fr, max_depth):
-    #print(max_depth)
     room = maze.get_room(*maze.get_start())
     state = State(room, None)
     fr.push(state)
@@ -11,7 +10,6 @@ def IDS(maze, fr, max_depth):
     room_array = []
     room_array.append(room)
     while not fr.is_empty():
-        
         # get item from fringe and get the room from that state
         state = fr.pop()
         room = state.get_room()
@@ -30,7 +28,6 @@ def IDS(maze, fr, max_depth):
             # loop through every possible move
             new_room, cost = room.make_move(d, state.get_cost())        # Get new room after move and cost to get there
             if new_room.is_visited == False and state.depth + 1 <= max_depth:                            # Only pushing the new room to the fringe, if it has not been visited before
-                print(state.depth)
                 new_state = State(new_room, state, cost)                # Create new state with new room and old room
                 new_state.depth = state.depth + 1
                 fr.push(new_state)                                      # push the new state
@@ -60,10 +57,9 @@ def solve_maze_general(maze, algorithm):
     elif algorithm == "IDS":
         fr = Fringe("STACK")
         current_max_depth = 0
-        while True:
-            if IDS(maze, fr, current_max_depth) == True:
-                return
+        while not IDS(maze, fr, current_max_depth):
             current_max_depth += 1
+        return 
     else:
         print("Algorithm not found/implemented, exit")
         return
