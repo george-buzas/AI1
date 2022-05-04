@@ -10,6 +10,7 @@ class State:
 		self.room = room
 		self.cost = cost
 		self.priority = priority
+		self.depth = 0
 
 	def get_room(self):
 		"""

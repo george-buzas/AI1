@@ -2,6 +2,46 @@
 from fringe import Fringe
 from state import State
 
+def IDS(maze, fr, max_depth):
+    #print(max_depth)
+    room = maze.get_room(*maze.get_start())
+    state = State(room, None)
+    fr.push(state)
+    room.is_visited = True
+    room_array = []
+    room_array.append(room)
+    while not fr.is_empty():
+        
+        # get item from fringe and get the room from that state
+        state = fr.pop()
+        room = state.get_room()
+
+        if room.is_goal():
+            # if room is the goal, print that with the statistics and the path and return
+            print("solved")
+            fr.print_stats()
+            state.print_path()
+            state.print_actions()
+            print()  # print newline
+            maze.print_maze_with_path(state)
+            return True
+
+        for d in room.get_connections():
+            # loop through every possible move
+            new_room, cost = room.make_move(d, state.get_cost())        # Get new room after move and cost to get there
+            if new_room.is_visited == False and state.depth + 1 <= max_depth:                            # Only pushing the new room to the fringe, if it has not been visited before
+                print(state.depth)
+                new_state = State(new_room, state, cost)                # Create new state with new room and old room
+                new_state.depth = state.depth + 1
+                fr.push(new_state)                                      # push the new state
+                new_room.is_visited = True
+                room_array.append(new_room)
+
+    for current_room in room_array:
+        current_room.is_visited = False
+
+    return False
+
 
 def solve_maze_general(maze, algorithm):
     """
@@ -17,6 +57,13 @@ def solve_maze_general(maze, algorithm):
         fr = Fringe("STACK")
     elif algorithm == "UCS" or algorithm == "GREEDY" or algorithm == "ASTAR":
         fr = Fringe("PRIORITY")
+    elif algorithm == "IDS":
+        fr = Fringe("STACK")
+        current_max_depth = 0
+        while True:
+            if IDS(maze, fr, current_max_depth) == True:
+                return
+            current_max_depth += 1
     else:
         print("Algorithm not found/implemented, exit")
         return
@@ -28,7 +75,7 @@ def solve_maze_general(maze, algorithm):
     room.is_visited = True
 
     while not fr.is_empty():
-
+        
         # get item from fringe and get the room from that state
         state = fr.pop()
         room = state.get_room()
@@ -51,7 +98,7 @@ def solve_maze_general(maze, algorithm):
                 fr.push(new_state)                                      # push the new state
                 if algorithm == "BFS" or algorithm == "DFS":
                     new_room.is_visited = True
-                    
+
         if algorithm == "UCS" or algorithm == "GREEDY" or algorithm == "ASTAR":
             room.is_visited = True
 
