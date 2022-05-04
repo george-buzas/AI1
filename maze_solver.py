@@ -2,6 +2,7 @@
 from fringe import Fringe
 from state import State
 
+# implementation of IDS algorithm
 def IDS(maze, fr, max_depth):
     room = maze.get_room(*maze.get_start())
     state = State(room, None)
@@ -26,16 +27,17 @@ def IDS(maze, fr, max_depth):
 
         for d in room.get_connections():
             # loop through every possible move
-            new_room, cost = room.make_move(d, state.get_cost())        # Get new room after move and cost to get there
-            if new_room.is_visited == False and state.depth + 1 <= max_depth:                            # Only pushing the new room to the fringe, if it has not been visited before
-                new_state = State(new_room, state, cost)                # Create new state with new room and old room
-                new_state.depth = state.depth + 1
-                fr.push(new_state)                                      # push the new state
-                new_room.is_visited = True
-                room_array.append(new_room)
-
+            new_room, cost = room.make_move(d, state.get_cost())             # Get new room after move and cost to get there
+            if new_room.is_visited == False and room.depth + 1 <= max_depth: # Only pushing the new room to the fringe, if it has not been visited before
+                new_state = State(new_room, state, cost)                     # Create new state with new room and old room
+                new_room.depth = room.depth + 1                              # Update the depth of the current state
+                fr.push(new_state)                                           # Push the new state
+                new_room.is_visited = True                                   # Mark the new_room as visited, so there will not be multiple instances of the same room in the fringe
+                room_array.append(new_room)                                  # If the IDS algorithm does not find a solution, we will mark all rooms added to the fringe, as not visited 
+    
     for current_room in room_array:
         current_room.is_visited = False
+        current_room.depth = 0
 
     return False
 

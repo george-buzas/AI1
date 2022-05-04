@@ -10,8 +10,9 @@ class State:
 		self.room = room
 		self.cost = cost
 		self.priority = priority
-		self.depth = 0
-
+		#self.is_visited = False
+		#self.depth = 0
+		
 	def get_room(self):
 		"""
 		:return: The room of which this state is in

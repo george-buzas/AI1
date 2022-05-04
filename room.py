@@ -13,6 +13,7 @@ class Room:
 		self.__start = False
 		self.maze = maze
 		self.is_visited = False
+		self.depth = 0
 
 	def can_move_to(self, d):
 		"""
