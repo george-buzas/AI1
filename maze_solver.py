@@ -33,12 +33,12 @@ def IDS(maze, fr, max_depth):
                 new_room.depth = room.depth + 1                              # Update the depth of the current state
                 fr.push(new_state)                                           # Push the new state
                 new_room.is_visited = True                                   # Mark the new_room as visited, so there will not be multiple instances of the same room in the fringe
-                room_array.append(new_room)                                  # If the IDS algorithm does not find a solution, we will mark all rooms added to the fringe, as not visited 
-    
+                room_array.append(new_room)                                
+    # If the IDS algorithm does not find a solution, we will mark all rooms added to the fringe, as not visited and we will reset the depth
     for current_room in room_array:
         current_room.is_visited = False
         current_room.depth = 0
-
+        
     return False
 
 
