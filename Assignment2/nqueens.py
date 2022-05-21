@@ -1,5 +1,10 @@
+from ast import operator
+from distutils.fancy_getopt import OptionDummy
 import sys
 import random
+import operator
+import math
+
 
 MAXQ = 100
 
@@ -152,15 +157,16 @@ def hill_climbing(board):
                     best = state
                     best_col = queen
                     best_row = row
+                if state == best and random.randint(0, 1) == 1:
+                    best = state
+                    best_col = queen
+                    best_row = row
 
             board[queen] = original_position
         if best <= evaluate_state(board):
             break
 
         board[best_col] = best_row
-
-
-
 
     if evaluate_state(board) == optimum:
         print('Solved puzzle!')
@@ -169,6 +175,103 @@ def hill_climbing(board):
     print_board(board) 
 
 
+# this function creates a child from the provided 2 parents.
+def reproduce(parent_1, parent_2, n_queens):
+    n = n_queens
+    c = random.randint(0, n - 1)
+    child = parent_1[0 : c] + parent_2[c : n]
+    return child
+
+# Mutation
+def mutation(child, n_queens):
+    fixed_probability = 0.2
+    random_probability = random.uniform(0, 1)
+
+    if fixed_probability < random_probability : # mutation
+        queen = random.randint(0, n_queens - 1)
+        row = random.randint(0, n_queens - 1)
+        child[queen] = row
+        print_board(child)
+    return child
+
+# Verify if a child is a solution
+def check_solution(child, optimum):
+    if evaluate_state(child) == optimum:
+        print('Solved puzzle!')
+        print('Final state is:')
+        print_board(child)   
+        return True
+    return False
+
+def genetic_algorithm(board, n_queens):
+    # initial population
+    population = list()
+    size = 50
+    for index in range(0, size):
+        population.append(init_board(n_queens))
+    
+    i = 0
+    optimum = (len(board) - 1) * len(board) / 2
+    while evaluate_state(board) != optimum:
+        i += 1
+        print('iteration ' + str(i))
+        if i == 1000:  # Give up after 1000 tries.
+            break
+        new_population = list()
+
+        # Calculate the fitness level of each individual in the population
+        # We always want to select as parents, only half of the population that has the biggest fitness level
+        fitness_level = list()
+        for individual in range(0, size):
+            fitness_level.append(evaluate_state(population[individual]))
+        
+        indices = list()
+        for index in range (0, size):
+            indices.append(index)
+
+        population_fitness = list(zip(fitness_level, indices))
+
+        # Sort the population based on the heursitic value(i.e. fitness level)
+        sorted_population = sorted(population_fitness, key = operator.itemgetter(0))
+        #print("final list - ", str(sorted_population))
+
+        # Pick only half of the population - best #half elements from the initial population
+        half_size = math.floor(size / 2)
+        half_population = list()
+        for individual in range (half_size, size):
+            #print(sorted_population[individual][0], sorted_population[individual][1])
+            half_population.append(population[sorted_population[individual][1]])
+        
+        # Regarding the crossover, we pick a pair of parents.
+        # Each pair of parents creates always two children.
+        # The reason for this is the following:
+        # Since we always pick only the best half of the current population, if we were to create
+        # only 1 child then, at each iteration the size of the population would decrease by half.
+        # But if we choose to create always two children, then the size of the population will be the same
+        # as the size of the initial population, regardless of how many iterations were done up until that point. 
+        # If only 1 child is created, and if we always pick the best half of the population,
+        # then after log(population_size) iterations there would be no population(i.e. the population size would be 0).
+        for j in range(0, half_size):
+            parent_1 = random.choice(half_population)
+            parent_2 = random.choice(half_population)
+            child_1 = reproduce(parent_1, parent_2, n_queens)
+            child_2 = reproduce(parent_2, parent_1, n_queens)
+
+            child_1 = mutation(child_1, n_queens)
+            print('Child 1 evaluation = ' + str(evaluate_state(child_1)))
+            if check_solution(child_1, optimum) == True:
+                return
+
+            child_2 = mutation(child_2, n_queens)
+            print('Child 2 evaluation = ' + str(evaluate_state(child_2)))
+            if check_solution(child_2, optimum) == True:
+                return
+
+            # if the current children are not a solution, add them to the new population
+            new_population.append(child_1)    
+            new_population.append(child_2)
+
+        population = new_population
 
 def simulated_annealing(board):
     """
@@ -198,12 +301,12 @@ def main():
         return False
 
     print('Which algorithm to use?')
-    algorithm = input('1: random, 2: hill-climbing, 3: simulated annealing \n')
+    algorithm = input('1: random, 2: hill-climbing, 3: simulated annealing, 4: genetic algorithm \n')
 
     try:
         algorithm = int(algorithm)
 
-        if algorithm not in range(1, 4):
+        if algorithm not in range(1, 5):
             raise ValueError
 
     except ValueError:
@@ -220,6 +323,8 @@ def main():
         hill_climbing(board)
     if algorithm == 3:
         simulated_annealing(board)
+    if algorithm == 4:
+        genetic_algorithm(board, n_queens)
 
 
 # This line is the starting point of the program.
