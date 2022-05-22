@@ -4,7 +4,7 @@ import sys
 import random
 import operator
 import math
-
+from math import e
 
 MAXQ = 100
 
@@ -163,8 +163,8 @@ def hill_climbing(board):
                     best_row = row
 
             board[queen] = original_position
-        if best <= evaluate_state(board):
-            break
+        #if best <= evaluate_state(board):
+        #    break
 
         board[best_col] = best_row
 
@@ -191,7 +191,7 @@ def mutation(child, n_queens):
         queen = random.randint(0, n_queens - 1)
         row = random.randint(0, n_queens - 1)
         child[queen] = row
-        print_board(child)
+        #print_board(child)
     return child
 
 # Verify if a child is a solution
@@ -246,7 +246,7 @@ def genetic_algorithm(board, n_queens):
         # Each pair of parents creates always two children.
         # The reason for this is the following:
         # Since we always pick only the best half of the current population, if we were to create
-        # only 1 child then, at each iteration the size of the population would decrease by half.
+        # only 1 child, then, at each iteration the size of the population would decrease by half.
         # But if we choose to create always two children, then the size of the population will be the same
         # as the size of the initial population, regardless of how many iterations were done up until that point. 
         # If only 1 child is created, and if we always pick the best half of the population,
@@ -273,13 +273,39 @@ def genetic_algorithm(board, n_queens):
 
         population = new_population
 
+def time_to_temperature(time):
+    return 1000 * (9 / 10) ** time
+
 def simulated_annealing(board):
-    """
-    Implement this yourself.
-    :param board:
-    :return:
-    """
-    pass
+    optimum = (len(board) - 1) * len(board) / 2
+    t = 0
+    while True:
+        t += 1
+        #print(t)
+        T = time_to_temperature(t)
+        if T == 0:
+            if evaluate_state(board) == optimum:
+                print('Solved puzzle!')
+            print('Final state is:')
+            print_board(board)
+            break;
+        # Deep copying method - less efficient
+        # next = copy.deepcopy(current)
+        # row = random.randint(0, len(current) - 1)
+        # column = random.randint(0, len(current) - 1)
+        # next[column] = row
+
+        state_current = evaluate_state(board)
+        row = random.randint(0, len(board) - 1)
+        column = random.randint(0, len(board) - 1)
+        original_row = board[column]
+        board[column] = row
+        state_next = evaluate_state(board)
+        
+        delta_e = state_next - state_current
+        
+        if delta_e <= 0 and (e**(delta_e / T)) < random.uniform(0, 1):
+            board[column] = original_row
 
 
 def main():
