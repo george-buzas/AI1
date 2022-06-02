@@ -1,5 +1,5 @@
 variables:
-  A, B, C, D, E : integer;
+  A, B, C, D, E: integer;
 
 domains:
   A, B, C, D, E <- [1..4];
